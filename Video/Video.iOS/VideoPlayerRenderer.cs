@@ -43,5 +43,21 @@ namespace Video.iOS
                 }
             }
         }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.OnElementPropertyChanged(sender, args);
+
+            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
+            {
+                SetAreTransportControlsEnabled();
+            }
+
+        }
+
+        void SetAreTransportControlsEnabled()
+        {
+            ((AVPlayerViewController)ViewController).ShowsPlaybackControls = Element.AreTransportControlsEnabled;
+        }
     }
 }

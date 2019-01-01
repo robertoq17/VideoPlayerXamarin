@@ -54,8 +54,41 @@ namespace Video.Droid
                     SetNativeControl(relativeLayout);
                 }
 
+                SetAreTransportControlsEnabled();
+
             }
 
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.OnElementPropertyChanged(sender, args);
+
+            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
+            {
+                SetAreTransportControlsEnabled();
+            }
+
+        }
+
+        void SetAreTransportControlsEnabled()
+        {
+            if (Element.AreTransportControlsEnabled)
+            {
+                mediaController = new MediaController(Context);
+                mediaController.SetMediaPlayer(videoView);
+                videoView.SetMediaController(mediaController);
+            }
+            else
+            {
+                videoView.SetMediaController(null);
+
+                if (mediaController != null)
+                {
+                    mediaController.SetMediaPlayer(null);
+                    mediaController = null;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)

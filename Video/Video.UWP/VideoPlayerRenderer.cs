@@ -31,8 +31,26 @@ namespace Video.UWP
                     mediaElement.CurrentStateChanged += OnMediaElementCurrentStateChanged;
                 }
 
+                SetAreTransportControlsEnabled();
+
             }
 
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.OnElementPropertyChanged(sender, args);
+
+            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
+            {
+                SetAreTransportControlsEnabled();
+            }
+
+        }
+
+        void SetAreTransportControlsEnabled()
+        {
+            Control.AreTransportControlsEnabled = Element.AreTransportControlsEnabled;
         }
 
         protected override void Dispose(bool disposing)
