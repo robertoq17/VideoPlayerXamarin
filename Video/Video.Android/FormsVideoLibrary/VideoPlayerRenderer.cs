@@ -10,12 +10,12 @@ using ARelativeLayout = Android.Widget.RelativeLayout;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
-[assembly: ExportRenderer(typeof(Video.VideoPlayer),
-                          typeof(Video.Droid.VideoPlayerRenderer))]
+[assembly: ExportRenderer(typeof(FormsVideoLibrary.VideoPlayer),
+                          typeof(FormsVideoLibrary.Droid.VideoPlayerRenderer))]
 
-namespace Video.Droid
+namespace FormsVideoLibrary.Droid
 {
-    class VideoPlayerRenderer : ViewRenderer<VideoPlayer, ARelativeLayout>
+    public class VideoPlayerRenderer : ViewRenderer<VideoPlayer, ARelativeLayout>
     {
         VideoView videoView;
         MediaController mediaController;    // Used to display transport controls
@@ -23,7 +23,6 @@ namespace Video.Droid
 
         public VideoPlayerRenderer(Context context) : base(context)
         {
-
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<VideoPlayer> args)
@@ -53,42 +52,9 @@ namespace Video.Droid
                     // Use the RelativeLayout as the native control
                     SetNativeControl(relativeLayout);
                 }
-
-                SetAreTransportControlsEnabled();
-
+                
             }
 
-        }
-
-        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            base.OnElementPropertyChanged(sender, args);
-
-            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
-            {
-                SetAreTransportControlsEnabled();
-            }
-
-        }
-
-        void SetAreTransportControlsEnabled()
-        {
-            if (Element.AreTransportControlsEnabled)
-            {
-                mediaController = new MediaController(Context);
-                mediaController.SetMediaPlayer(videoView);
-                videoView.SetMediaController(mediaController);
-            }
-            else
-            {
-                videoView.SetMediaController(null);
-
-                if (mediaController != null)
-                {
-                    mediaController.SetMediaPlayer(null);
-                    mediaController = null;
-                }
-            }
         }
 
         protected override void Dispose(bool disposing)
@@ -105,6 +71,5 @@ namespace Video.Droid
             isPrepared = true;
 
         }
-
     }
 }

@@ -11,9 +11,9 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(Video.VideoPlayer),
-                          typeof(Video.iOS.VideoPlayerRenderer))]
-namespace Video.iOS
+[assembly: ExportRenderer(typeof(FormsVideoLibrary.VideoPlayer),
+                          typeof(FormsVideoLibrary.iOS.VideoPlayerRenderer))]
+namespace FormsVideoLibrary.iOS
 {
     class VideoPlayerRenderer : ViewRenderer<VideoPlayer, UIView>
     {

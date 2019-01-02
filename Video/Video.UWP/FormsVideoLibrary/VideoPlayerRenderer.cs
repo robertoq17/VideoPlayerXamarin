@@ -3,16 +3,17 @@ using System.ComponentModel;
 
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
-[assembly: ExportRenderer(typeof(Video.VideoPlayer),
-                          typeof(Video.UWP.VideoPlayerRenderer))]
+[assembly: ExportRenderer(typeof(FormsVideoLibrary.VideoPlayer),
+                          typeof(FormsVideoLibrary.UWP.VideoPlayerRenderer))]
 
-namespace Video.UWP
+namespace FormsVideoLibrary.UWP
 {
     public class VideoPlayerRenderer : ViewRenderer<VideoPlayer, MediaElement>
     {
@@ -62,7 +63,31 @@ namespace Video.UWP
             }
 
             base.Dispose(disposing);
-        }        
+        }
+
+        void OnMediaElementMediaOpened(object sender, RoutedEventArgs args)
+        {
+            ((IVideoPlayerController)Element).Duration = Control.NaturalDuration.TimeSpan;
+        }
+
+        void OnMediaElementCurrentStateChanged(object sender, RoutedEventArgs args)
+        {
+            VideoStatus videoStatus = VideoStatus.NotReady;
+
+            switch (Control.CurrentState)
+            {
+                case MediaElementState.Playing:
+                    videoStatus = VideoStatus.Playing;
+                    break;
+
+                case MediaElementState.Paused:
+                case MediaElementState.Stopped:
+                    videoStatus = VideoStatus.Paused;
+                    break;
+            }
+
+            ((IVideoPlayerController)Element).Status = videoStatus;
+        }
 
     }
 }
