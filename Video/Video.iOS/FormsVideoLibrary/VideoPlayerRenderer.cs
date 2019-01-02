@@ -41,6 +41,8 @@ namespace FormsVideoLibrary.iOS
                     // Use the View from the controller as the native control
                     SetNativeControl(_playerViewController.View);
                 }
+
+                SetSource();
             }
         }
 
@@ -52,12 +54,57 @@ namespace FormsVideoLibrary.iOS
             {
                 SetAreTransportControlsEnabled();
             }
+            else if (args.PropertyName == VideoPlayer.SourceProperty.PropertyName)
+            {
+                SetSource();
+            }
 
         }
 
         void SetAreTransportControlsEnabled()
         {
             ((AVPlayerViewController)ViewController).ShowsPlaybackControls = Element.AreTransportControlsEnabled;
+        }
+
+        void SetSource()
+        {
+            AVAsset asset = null;
+
+            if (Element.Source is UriVideoSource)
+            {
+                string uri = (Element.Source as UriVideoSource).Uri;
+
+                if (!String.IsNullOrWhiteSpace(uri))
+                {
+                    asset = AVAsset.FromUrl(new NSUrl(uri));
+                }
+            }
+
+            if (asset != null)
+            {
+                playerItem = new AVPlayerItem(asset);
+            }
+            else
+            {
+                playerItem = null;
+            }
+
+            player.ReplaceCurrentItemWithPlayerItem(playerItem);
+
+            if (playerItem != null && Element.AutoPlay)
+            {
+                player.Play();
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (player != null)
+            {
+                player.ReplaceCurrentItemWithPlayerItem(null);
+            }
         }
     }
 }

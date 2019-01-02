@@ -52,9 +52,45 @@ namespace FormsVideoLibrary.Droid
                     // Use the RelativeLayout as the native control
                     SetNativeControl(relativeLayout);
                 }
-                
+
+                SetSource();
+
             }
 
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.OnElementPropertyChanged(sender, args);
+
+            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
+            {
+                SetAreTransportControlsEnabled();
+            }
+            else if (args.PropertyName == VideoPlayer.SourceProperty.PropertyName)
+            {
+                SetSource();
+            }
+        }
+
+        void SetAreTransportControlsEnabled()
+        {
+            if (Element.AreTransportControlsEnabled)
+            {
+                mediaController = new MediaController(Context);
+                mediaController.SetMediaPlayer(videoView);
+                videoView.SetMediaController(mediaController);
+            }
+            else
+            {
+                videoView.SetMediaController(null);
+
+                if (mediaController != null)
+                {
+                    mediaController.SetMediaPlayer(null);
+                    mediaController = null;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -70,6 +106,28 @@ namespace FormsVideoLibrary.Droid
         {
             isPrepared = true;
 
+        }
+
+        void SetSource()
+        {
+            isPrepared = false;
+            bool hasSetSource = false;
+
+            if (Element.Source is UriVideoSource)
+            {
+                string uri = (Element.Source as UriVideoSource).Uri;
+
+                if (!String.IsNullOrWhiteSpace(uri))
+                {
+                    videoView.SetVideoURI(Android.Net.Uri.Parse(uri));
+                    hasSetSource = true;
+                }
+            }
+
+            if (hasSetSource && Element.AutoPlay)
+            {
+                videoView.Start();
+            }
         }
     }
 }

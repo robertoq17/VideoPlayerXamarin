@@ -34,6 +34,9 @@ namespace FormsVideoLibrary.UWP
 
                 SetAreTransportControlsEnabled();
 
+                SetSource();
+                SetAutoPlay();
+
             }
 
         }
@@ -45,6 +48,14 @@ namespace FormsVideoLibrary.UWP
             if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
             {
                 SetAreTransportControlsEnabled();
+            }
+            else if (args.PropertyName == VideoPlayer.SourceProperty.PropertyName)
+            {
+                SetSource();
+            }
+            else if (args.PropertyName == VideoPlayer.AutoPlayProperty.PropertyName)
+            {
+                SetAutoPlay();
             }
 
         }
@@ -87,6 +98,32 @@ namespace FormsVideoLibrary.UWP
             }
 
             ((IVideoPlayerController)Element).Status = videoStatus;
+        }
+
+        async void SetSource()
+        {
+            bool hasSetSource = false;
+
+            if (Element.Source is UriVideoSource)
+            {
+                string uri = (Element.Source as UriVideoSource).Uri;
+
+                if (!String.IsNullOrWhiteSpace(uri))
+                {
+                    Control.Source = new Uri(uri);
+                    hasSetSource = true;
+                }
+            }
+
+            if (!hasSetSource)
+            {
+                Control.Source = null;
+            }
+        }
+
+        void SetAutoPlay()
+        {
+            Control.AutoPlay = Element.AutoPlay;
         }
 
     }

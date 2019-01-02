@@ -10,6 +10,7 @@ namespace FormsVideoLibrary
         // AreTransportControlsEnabled property
         public static readonly BindableProperty AreTransportControlsEnabledProperty =
             BindableProperty.Create(nameof(AreTransportControlsEnabled), typeof(bool), typeof(VideoPlayer), true);
+        public UriVideoSource Source;
 
         public bool AreTransportControlsEnabled
         {
