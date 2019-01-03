@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 
 namespace FormsVideoLibrary
@@ -10,7 +8,6 @@ namespace FormsVideoLibrary
         // AreTransportControlsEnabled property
         public static readonly BindableProperty AreTransportControlsEnabledProperty =
             BindableProperty.Create(nameof(AreTransportControlsEnabled), typeof(bool), typeof(VideoPlayer), true);
-        public UriVideoSource Source;
 
         public bool AreTransportControlsEnabled
         {
@@ -18,32 +15,30 @@ namespace FormsVideoLibrary
             get { return (bool)GetValue(AreTransportControlsEnabledProperty); }
         }
 
-        public VideoStatus Status
-        { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        // Source property
+        public static readonly BindableProperty SourceProperty =
+            BindableProperty.Create(nameof(Source), typeof(VideoSource), typeof(VideoPlayer), null);
 
-        public TimeSpan Duration
-        { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        [TypeConverter(typeof(VideoSourceConverter))]
+        public VideoSource Source
+        {
+            set { SetValue(SourceProperty, value); }
+            get { return (VideoSource)GetValue(SourceProperty); }
+        }
+
+        // AutoPlay property
+        public static readonly BindableProperty AutoPlayProperty =
+            BindableProperty.Create(nameof(AutoPlay), typeof(bool), typeof(VideoPlayer), true);
+
+        public bool AutoPlay
+        {
+            set { SetValue(AutoPlayProperty, value); }
+            get { return (bool)GetValue(AutoPlayProperty); }
+        }
+
+        VideoStatus IVideoPlayerController.Status { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        TimeSpan IVideoPlayerController.Duration { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
-
-    // Source property
-    public static readonly BindableProperty SourceProperty =
-        BindableProperty.Create(nameof(Source), typeof(VideoSource), typeof(VideoPlayer), null);
-
-
-    [TypeConverter(typeof(VideoSourceConverter))]
-    public VideoSource Source
-    {
-        set { SetValue(SourceProperty, value); }
-        get { return (VideoSource)GetValue(SourceProperty); }
-    }
-
-    // AutoPlay property
-    public static readonly BindableProperty AutoPlayProperty =
-        BindableProperty.Create(nameof(AutoPlay), typeof(bool), typeof(VideoPlayer), true);
-
-    public bool AutoPlay
-    {
-        set { SetValue(AutoPlayProperty, value); }
-        get { return (bool)GetValue(AutoPlayProperty); }
-    }
+   
 }
