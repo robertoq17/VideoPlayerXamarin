@@ -29,6 +29,7 @@ namespace FormsVideoLibrary
     public static readonly BindableProperty SourceProperty =
         BindableProperty.Create(nameof(Source), typeof(VideoSource), typeof(VideoPlayer), null);
 
+
     [TypeConverter(typeof(VideoSourceConverter))]
     public VideoSource Source
     {

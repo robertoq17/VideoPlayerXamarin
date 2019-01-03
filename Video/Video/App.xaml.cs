@@ -1,4 +1,5 @@
 ﻿using System;
+using Video.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,7 +12,7 @@ namespace Video
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage( new MainPage());
+            MainPage = new NavigationPage( new VideoPage());
         }
 
         protected override void OnStart()
