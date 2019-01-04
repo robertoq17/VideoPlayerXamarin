@@ -12,7 +12,7 @@ namespace Video
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage( new VideoPage());
+            MainPage = new NavigationPage( new SelectWebVideo());
         }
 
         protected override void OnStart()
