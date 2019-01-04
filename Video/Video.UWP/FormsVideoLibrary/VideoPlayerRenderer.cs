@@ -36,9 +36,34 @@ namespace FormsVideoLibrary.UWP
 
                 SetSource();
                 SetAutoPlay();
-
+                args.NewElement.PlayRequested += OnPlayRequested;
+                args.NewElement.PauseRequested += OnPauseRequested;
+                args.NewElement.StopRequested += OnStopRequested;
             }
 
+            if (args.OldElement != null)
+            {
+                //···
+                args.OldElement.PlayRequested -= OnPlayRequested;
+                args.OldElement.PauseRequested -= OnPauseRequested;
+                args.OldElement.StopRequested -= OnStopRequested;
+            }
+        }
+
+        // Event handlers to implement methods
+        void OnPlayRequested(object sender, EventArgs args)
+        {
+            Control.Play();
+        }
+
+        void OnPauseRequested(object sender, EventArgs args)
+        {
+            Control.Pause();
+        }
+
+        void OnStopRequested(object sender, EventArgs args)
+        {
+            Control.Stop();
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)

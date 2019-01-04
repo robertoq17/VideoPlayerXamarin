@@ -43,7 +43,60 @@ namespace FormsVideoLibrary.iOS
                 }
 
                 SetSource();
+                args.NewElement.UpdateStatus += OnUpdateStatus;
+                args.NewElement.PlayRequested += OnPlayRequested;
+                args.NewElement.PauseRequested += OnPauseRequested;
+                args.NewElement.StopRequested += OnStopRequested;
             }
+
+            if (args.OldElement != null)
+            {
+                args.OldElement.UpdateStatus -= OnUpdateStatus;
+                args.OldElement.PlayRequested -= OnPlayRequested;
+                args.OldElement.PauseRequested -= OnPauseRequested;
+                args.OldElement.StopRequested -= OnStopRequested;
+            }
+        }
+
+        void OnUpdateStatus(object sender, EventArgs args)
+        {
+            VideoStatus videoStatus = VideoStatus.NotReady;
+
+            switch (player.Status)
+            {
+                case AVPlayerStatus.ReadyToPlay:
+                    switch (player.TimeControlStatus)
+                    {
+                        case AVPlayerTimeControlStatus.Playing:
+                            videoStatus = VideoStatus.Playing;
+                            break;
+
+                        case AVPlayerTimeControlStatus.Paused:
+                            videoStatus = VideoStatus.Paused;
+                            break;
+                    }
+                    break;
+            }
+
+            ((IVideoPlayerController)Element).Status = videoStatus;
+        }
+
+
+        // Event handlers to implement methods
+        void OnPlayRequested(object sender, EventArgs args)
+        {
+            player.Play();
+        }
+
+        void OnPauseRequested(object sender, EventArgs args)
+        {
+            player.Pause();
+        }
+
+        void OnStopRequested(object sender, EventArgs args)
+        {
+            player.Pause();
+            player.Seek(new CMTime(0, 1));
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -77,7 +130,7 @@ namespace FormsVideoLibrary.iOS
                 if (!String.IsNullOrWhiteSpace(uri))
                 {
                     asset = AVAsset.FromUrl(new NSUrl(uri));
-                }               
+                }
             }
             else if (Element.Source is ResourceVideoSource)
             {
@@ -128,7 +181,5 @@ namespace FormsVideoLibrary.iOS
                 player.ReplaceCurrentItemWithPlayerItem(null);
             }
         }
-
-
     }
 }

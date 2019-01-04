@@ -51,12 +51,40 @@ namespace FormsVideoLibrary.Droid
 
                     // Use the RelativeLayout as the native control
                     SetNativeControl(relativeLayout);
+
+                    videoView.Prepared += OnVideoViewPrepared;
+
                 }
 
                 SetSource();
-
+                args.NewElement.UpdateStatus += OnUpdateStatus;
+                args.NewElement.PlayRequested += OnPlayRequested;
+                args.NewElement.PauseRequested += OnPauseRequested;
+                args.NewElement.StopRequested += OnStopRequested;
             }
 
+            if (args.OldElement != null)
+            {
+                args.OldElement.UpdateStatus -= OnUpdateStatus;
+                args.OldElement.PlayRequested -= OnPlayRequested;
+                args.OldElement.PauseRequested -= OnPauseRequested;
+                args.OldElement.StopRequested -= OnStopRequested;
+            }
+        }
+
+        void OnPlayRequested(object sender, EventArgs args)
+        {
+            videoView.Start();
+        }
+
+        void OnPauseRequested(object sender, EventArgs args)
+        {
+            videoView.Pause();
+        }
+
+        void OnStopRequested(object sender, EventArgs args)
+        {
+            videoView.StopPlayback();
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -99,13 +127,29 @@ namespace FormsVideoLibrary.Droid
             {
                 videoView.Prepared -= OnVideoViewPrepared;
             }
+            if (Element != null)
+            {
+                Element.UpdateStatus -= OnUpdateStatus;
+            }
+
             base.Dispose(disposing);
         }
 
         void OnVideoViewPrepared(object sender, EventArgs args)
         {
             isPrepared = true;
+            //···
+        }
+        //···
+        void OnUpdateStatus(object sender, EventArgs args)
+        {
+            VideoStatus status = VideoStatus.NotReady;
 
+            if (isPrepared)
+            {
+                status = videoView.IsPlaying ? VideoStatus.Playing : VideoStatus.Paused;
+            }
+            //···
         }
 
         void SetSource()
