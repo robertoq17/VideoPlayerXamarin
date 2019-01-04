@@ -77,6 +77,28 @@ namespace FormsVideoLibrary.iOS
                 if (!String.IsNullOrWhiteSpace(uri))
                 {
                     asset = AVAsset.FromUrl(new NSUrl(uri));
+                }               
+            }
+            else if (Element.Source is ResourceVideoSource)
+            {
+                string path = (Element.Source as ResourceVideoSource).Path;
+
+                if (!String.IsNullOrWhiteSpace(path))
+                {
+                    string directory = Path.GetDirectoryName(path);
+                    string filename = Path.GetFileNameWithoutExtension(path);
+                    string extension = Path.GetExtension(path).Substring(1);
+                    NSUrl url = NSBundle.MainBundle.GetUrlForResource(filename, extension, directory);
+                    asset = AVAsset.FromUrl(url);
+                }
+            }
+            else if (Element.Source is FileVideoSource)
+            {
+                string uri = (Element.Source as FileVideoSource).File;
+
+                if (!String.IsNullOrWhiteSpace(uri))
+                {
+                    asset = AVAsset.FromUrl(new NSUrl(uri));
                 }
             }
 
@@ -106,5 +128,7 @@ namespace FormsVideoLibrary.iOS
                 player.ReplaceCurrentItemWithPlayerItem(null);
             }
         }
+
+
     }
 }

@@ -7,32 +7,32 @@ using Xamarin.Forms;
 // Need application's MainActivity
 using Video.Droid;
 
-//[assembly: Dependency(typeof(Video.Droid.VideoPicker))]
+[assembly: Dependency(typeof(FormsVideoLibrary.Droid.VideoPicker))]
 
 namespace FormsVideoLibrary.Droid
 {
-    //public class VideoPicker : IVideoPicker
-    //{
-    //    public Task<string> GetVideoFileAsync()
-    //    {
-    //        // Define the Intent for getting images
-    //        Intent intent = new Intent();
-    //        intent.SetType("video/*");
-    //        intent.SetAction(Intent.ActionGetContent);
+    public class VideoPicker : IVideoPicker
+    {
+        public Task<string> GetVideoFileAsync()
+        {
+            // Define the Intent for getting images
+            Intent intent = new Intent();
+            intent.SetType("video/*");
+            intent.SetAction(Intent.ActionGetContent);
 
-    //        // Get the MainActivity instance
-    //        MainActivity activity = MainActivity.Current;
+            // Get the MainActivity instance
+            MainActivity activity = MainActivity.Current;
 
-    //        // Start the picture-picker activity (resumes in MainActivity.cs)
-    //        activity.StartActivityForResult(
-    //            Intent.CreateChooser(intent, "Select Video"),
-    //            MainActivity.PickImageId);
+            // Start the picture-picker activity (resumes in MainActivity.cs)
+            activity.StartActivityForResult(
+                Intent.CreateChooser(intent, "Select Video"),
+                MainActivity.PickImageId);
 
-    //        // Save the TaskCompletionSource object as a MainActivity property
-    //        activity.PickImageTaskCompletionSource = new TaskCompletionSource<string>();
+            // Save the TaskCompletionSource object as a MainActivity property
+            activity.PickImageTaskCompletionSource = new TaskCompletionSource<string>();
 
-    //        // Return Task object
-    //        return activity.PickImageTaskCompletionSource.Task;
-    //    }
-    //}
+            // Return Task object
+            return activity.PickImageTaskCompletionSource.Task;
+        }
+    }
 }

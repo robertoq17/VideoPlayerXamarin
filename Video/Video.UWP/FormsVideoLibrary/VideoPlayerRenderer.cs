@@ -114,6 +114,29 @@ namespace FormsVideoLibrary.UWP
                     hasSetSource = true;
                 }
             }
+            else if (Element.Source is ResourceVideoSource)
+            {
+                string path = "ms-appx:///" + (Element.Source as ResourceVideoSource).Path;
+
+                if (!String.IsNullOrWhiteSpace(path))
+                {
+                    Control.Source = new Uri(path);
+                    hasSetSource = true;
+                }
+            }
+            else if (Element.Source is FileVideoSource)
+            {
+                // Code requires Pictures Library in Package.appxmanifest Capabilities to be enabled
+                string filename = (Element.Source as FileVideoSource).File;
+
+                if (!String.IsNullOrWhiteSpace(filename))
+                {
+                    StorageFile storageFile = await StorageFile.GetFileFromPathAsync(filename);
+                    IRandomAccessStreamWithContentType stream = await storageFile.OpenReadAsync();
+                    Control.SetSource(stream, storageFile.ContentType);
+                    hasSetSource = true;
+                }
+            }
 
             if (!hasSetSource)
             {

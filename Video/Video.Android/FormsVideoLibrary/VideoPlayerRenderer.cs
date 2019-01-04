@@ -123,6 +123,29 @@ namespace FormsVideoLibrary.Droid
                     hasSetSource = true;
                 }
             }
+            else if (Element.Source is ResourceVideoSource)
+            {
+                string package = Context.PackageName;
+                string path = (Element.Source as ResourceVideoSource).Path;
+
+                if (!String.IsNullOrWhiteSpace(path))
+                {
+                    string filename = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+                    string uri = "android.resource://" + package + "/raw/" + filename;
+                    videoView.SetVideoURI(Android.Net.Uri.Parse(uri));
+                    hasSetSource = true;
+                }
+            }
+            else if (Element.Source is FileVideoSource)
+            {
+                string filename = (Element.Source as FileVideoSource).File;
+
+                if (!String.IsNullOrWhiteSpace(filename))
+                {
+                    videoView.SetVideoPath(filename);
+                    hasSetSource = true;
+                }
+            }
 
             if (hasSetSource && Element.AutoPlay)
             {
