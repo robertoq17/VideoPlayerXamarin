@@ -12,7 +12,7 @@ namespace Video
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage( new CustomPositionBarPage());
+            MainPage = new NavigationPage( new VideoPlayerPage());
         }
 
         protected override void OnStart()

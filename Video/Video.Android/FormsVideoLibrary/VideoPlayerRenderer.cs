@@ -49,11 +49,7 @@ namespace FormsVideoLibrary.Droid
                     // Handle a VideoView event
                     videoView.Prepared += OnVideoViewPrepared;
 
-                    // Use the RelativeLayout as the native control
                     SetNativeControl(relativeLayout);
-
-                    videoView.Prepared += OnVideoViewPrepared;
-
                 }
 
                 SetAreTransportControlsEnabled();
@@ -130,6 +126,51 @@ namespace FormsVideoLibrary.Droid
             }
         }
 
+        void SetSource()
+        {
+            isPrepared = false;
+            bool hasSetSource = false;
+
+            if (Element.Source is UriVideoSource)
+            {
+                string uri = (Element.Source as UriVideoSource).Uri;
+
+                if (!String.IsNullOrWhiteSpace(uri))
+                {
+                    videoView.SetVideoURI(Android.Net.Uri.Parse(uri));
+                    hasSetSource = true;
+                }
+            }
+            else if (Element.Source is FileVideoSource)
+            {
+                string filename = (Element.Source as FileVideoSource).File;
+
+                if (!String.IsNullOrWhiteSpace(filename))
+                {
+                    videoView.SetVideoPath(filename);
+                    hasSetSource = true;
+                }
+            }
+            else if (Element.Source is ResourceVideoSource)
+            {
+                string package = Context.PackageName;
+                string path = (Element.Source as ResourceVideoSource).Path;
+
+                if (!String.IsNullOrWhiteSpace(path))
+                {
+                    string filename = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+                    string uri = "android.resource://" + package + "/raw/" + filename;
+                    videoView.SetVideoURI(Android.Net.Uri.Parse(uri));
+                    hasSetSource = true;
+                }
+            }
+
+            if (hasSetSource && Element.AutoPlay)
+            {
+                videoView.Start();
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (Control != null && videoView != null)
@@ -150,6 +191,7 @@ namespace FormsVideoLibrary.Droid
             ((IVideoPlayerController)Element).Duration = TimeSpan.FromMilliseconds(videoView.Duration);
         }
 
+        // Event handler to update status
         void OnUpdateStatus(object sender, EventArgs args)
         {
             VideoStatus status = VideoStatus.NotReady;
@@ -159,54 +201,13 @@ namespace FormsVideoLibrary.Droid
                 status = videoView.IsPlaying ? VideoStatus.Playing : VideoStatus.Paused;
             }
 
+            ((IVideoPlayerController)Element).Status = status;
+
             // Set Position property
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(videoView.CurrentPosition);
             ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, timeSpan);
         }
 
-        void SetSource()
-        {
-            isPrepared = false;
-            bool hasSetSource = false;
 
-            if (Element.Source is UriVideoSource)
-            {
-                string uri = (Element.Source as UriVideoSource).Uri;
-
-                if (!String.IsNullOrWhiteSpace(uri))
-                {
-                    videoView.SetVideoURI(Android.Net.Uri.Parse(uri));
-                    hasSetSource = true;
-                }
-            }
-            else if (Element.Source is ResourceVideoSource)
-            {
-                string package = Context.PackageName;
-                string path = (Element.Source as ResourceVideoSource).Path;
-
-                if (!String.IsNullOrWhiteSpace(path))
-                {
-                    string filename = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
-                    string uri = "android.resource://" + package + "/raw/" + filename;
-                    videoView.SetVideoURI(Android.Net.Uri.Parse(uri));
-                    hasSetSource = true;
-                }
-            }
-            else if (Element.Source is FileVideoSource)
-            {
-                string filename = (Element.Source as FileVideoSource).File;
-
-                if (!String.IsNullOrWhiteSpace(filename))
-                {
-                    videoView.SetVideoPath(filename);
-                    hasSetSource = true;
-                }
-            }
-
-            if (hasSetSource && Element.AutoPlay)
-            {
-                videoView.Start();
-            }
-        }
     }
 }
