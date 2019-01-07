@@ -90,7 +90,50 @@ namespace FormsVideoLibrary
             get { return Status; }
         }
 
-        public TimeSpan Duration { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        // Duration read-only property
+        private static readonly BindablePropertyKey DurationPropertyKey =
+            BindableProperty.CreateReadOnly(nameof(Duration), typeof(TimeSpan), typeof(VideoPlayer), new TimeSpan(),
+                propertyChanged: (bindable, oldValue, newValue) => ((VideoPlayer)bindable).SetTimeToEnd());
+
+        public static readonly BindableProperty DurationProperty = DurationPropertyKey.BindableProperty;
+
+        public TimeSpan Duration
+        {
+            get { return (TimeSpan)GetValue(DurationProperty); }
+        }
+
+        TimeSpan IVideoPlayerController.Duration
+        {
+            set { SetValue(DurationPropertyKey, value); }
+            get { return Duration; }
+        }
+
+        // Position property
+        public static readonly BindableProperty PositionProperty =
+            BindableProperty.Create(nameof(Position), typeof(TimeSpan), typeof(VideoPlayer), new TimeSpan(),
+                propertyChanged: (bindable, oldValue, newValue) => ((VideoPlayer)bindable).SetTimeToEnd());
+
+        public TimeSpan Position
+        {
+            set { SetValue(PositionProperty, value); }
+            get { return (TimeSpan)GetValue(PositionProperty); }
+        }
+
+        private static readonly BindablePropertyKey TimeToEndPropertyKey =
+            BindableProperty.CreateReadOnly(nameof(TimeToEnd), typeof(TimeSpan), typeof(VideoPlayer), new TimeSpan());
+
+        public static readonly BindableProperty TimeToEndProperty = TimeToEndPropertyKey.BindableProperty;
+
+        public TimeSpan TimeToEnd
+        {
+            private set { SetValue(TimeToEndPropertyKey, value); }
+            get { return (TimeSpan)GetValue(TimeToEndProperty); }
+        }
+
+        void SetTimeToEnd()
+        {
+            TimeToEnd = Duration - Position;
+        }
     }
    
 }

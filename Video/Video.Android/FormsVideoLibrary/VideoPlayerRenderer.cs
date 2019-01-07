@@ -99,6 +99,13 @@ namespace FormsVideoLibrary.Droid
             {
                 SetSource();
             }
+            else if (args.PropertyName == VideoPlayer.PositionProperty.PropertyName)
+            {
+                if (Math.Abs(videoView.CurrentPosition - Element.Position.TotalMilliseconds) > 1000)
+                {
+                    videoView.SeekTo((int)Element.Position.TotalMilliseconds);
+                }
+            }
         }
 
         void SetAreTransportControlsEnabled()
@@ -138,7 +145,9 @@ namespace FormsVideoLibrary.Droid
         void OnVideoViewPrepared(object sender, EventArgs args)
         {
             isPrepared = true;
-            //···
+
+
+            ((IVideoPlayerController)Element).Duration = TimeSpan.FromMilliseconds(videoView.Duration);
         }
         //···
         void OnUpdateStatus(object sender, EventArgs args)
@@ -149,7 +158,9 @@ namespace FormsVideoLibrary.Droid
             {
                 status = videoView.IsPlaying ? VideoStatus.Playing : VideoStatus.Paused;
             }
-            //···
+
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(videoView.CurrentPosition);
+            ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, timeSpan);
         }
 
         void SetSource()

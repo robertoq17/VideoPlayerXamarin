@@ -78,7 +78,20 @@ namespace FormsVideoLibrary.iOS
                     break;
             }
 
+            if (playerItem != null)
+            {
+                ((IVideoPlayerController)Element).Duration = ConvertTime(playerItem.Duration);
+                //···
+                ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, ConvertTime(playerItem.CurrentTime));
+            }
+
             ((IVideoPlayerController)Element).Status = videoStatus;
+        }
+
+        TimeSpan ConvertTime(CMTime cmTime)
+        {
+            return TimeSpan.FromSeconds(Double.IsNaN(cmTime.Seconds) ? 0 : cmTime.Seconds);
+
         }
 
 
@@ -110,6 +123,15 @@ namespace FormsVideoLibrary.iOS
             else if (args.PropertyName == VideoPlayer.SourceProperty.PropertyName)
             {
                 SetSource();
+            }
+            else if (args.PropertyName == VideoPlayer.PositionProperty.PropertyName)
+            {
+                TimeSpan controlPosition = ConvertTime(player.CurrentTime);
+
+                if (Math.Abs((controlPosition - Element.Position).TotalSeconds) > 1)
+                {
+                    player.Seek(CMTime.FromSeconds(Element.Position.TotalSeconds, 1));
+                }
             }
 
         }

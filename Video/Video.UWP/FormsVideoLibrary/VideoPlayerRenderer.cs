@@ -82,7 +82,19 @@ namespace FormsVideoLibrary.UWP
             {
                 SetAutoPlay();
             }
+            else if (args.PropertyName == VideoPlayer.PositionProperty.PropertyName)
+            {
+                if (Math.Abs((Control.Position - Element.Position).TotalSeconds) > 1)
+                {
+                    Control.Position = Element.Position;
+                }
+            }
 
+        }
+
+        void OnUpdateStatus(object sender, EventArgs args)
+        {
+            ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, Control.Position);
         }
 
         void SetAreTransportControlsEnabled()
