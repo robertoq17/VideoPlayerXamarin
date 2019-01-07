@@ -37,7 +37,8 @@
                      BindingContext="{x:Reference videoPlayer}">
 
                 <Label Text="{Binding Path=Position,StringFormat='{0:hh\\:mm\\:ss}'}"
-                   VerticalOptions="Center"/>
+                   VerticalOptions="Center"
+                       TextColor="White"/>
 
             <Button Text="&#x25B6;&#xFE0F; Play"
                     HorizontalOptions="CenterAndExpand"
@@ -71,7 +72,8 @@
 
             <Label Text="{Binding Path=TimeToEnd,
                                   StringFormat='{0:hh\\:mm\\:ss}'}"
-                   VerticalOptions="Center" />
+                   VerticalOptions="Center" 
+                   TextColor="White"/>
             </StackLayout>
 
             <video:PositionSlider Grid.Row="2"
@@ -80,12 +82,12 @@
                               Duration="{Binding Duration}"           
                               Position="{Binding Position}">
                 <video:PositionSlider.Triggers>
-                    <DataTrigger TargetType="video:PositionSlider"
+                <DataTrigger TargetType="video:PositionSlider"
                              Binding="{Binding Status}"
                              Value="{x:Static video:VideoStatus.NotReady}">
-                        <Setter Property="IsEnabled" Value="False" />
-                    </DataTrigger>
-                </video:PositionSlider.Triggers>
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </video:PositionSlider.Triggers>
             </video:PositionSlider>
         </Grid>
     </ContentPage>

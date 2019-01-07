@@ -56,7 +56,9 @@ namespace FormsVideoLibrary.Droid
 
                 }
 
+                SetAreTransportControlsEnabled();
                 SetSource();
+
                 args.NewElement.UpdateStatus += OnUpdateStatus;
                 args.NewElement.PlayRequested += OnPlayRequested;
                 args.NewElement.PauseRequested += OnPauseRequested;
@@ -145,11 +147,9 @@ namespace FormsVideoLibrary.Droid
         void OnVideoViewPrepared(object sender, EventArgs args)
         {
             isPrepared = true;
-
-
             ((IVideoPlayerController)Element).Duration = TimeSpan.FromMilliseconds(videoView.Duration);
         }
-        //···
+
         void OnUpdateStatus(object sender, EventArgs args)
         {
             VideoStatus status = VideoStatus.NotReady;
@@ -159,6 +159,7 @@ namespace FormsVideoLibrary.Droid
                 status = videoView.IsPlaying ? VideoStatus.Playing : VideoStatus.Paused;
             }
 
+            // Set Position property
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(videoView.CurrentPosition);
             ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, timeSpan);
         }
