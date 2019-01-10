@@ -48,5 +48,15 @@ namespace Video.Views
 
             btn.IsEnabled = true;
         }
+
+        void OnShowVideoYoutubeClicked(object sender, EventArgs args)
+        {
+            Button btn = (Button)sender;
+            btn.IsEnabled = false;
+
+                App.Current.MainPage = new VideoYoutube();
+
+            btn.IsEnabled = true;
+        }
     }
 }

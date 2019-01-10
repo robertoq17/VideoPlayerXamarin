@@ -15,7 +15,8 @@
         <video:VideoPlayer x:Name="videoPlayer"
                            Grid.Row="0"
                            AreTransportControlsEnabled="False"
-                           Source="{StaticResource ElephantsDream}" />
+                           Source="{StaticResource ElephantsDream}" 
+                           AutoPlay="False"/>
 
         <ActivityIndicator Grid.Row="0"
                            Color="Gray"
@@ -90,11 +91,56 @@
             </video:PositionSlider.Triggers>
         </video:PositionSlider>
 
-        <StackLayout>
+        <StackLayout
+            BindingContext="{x:Reference videoPlayer}">
             <Button Text="Show Video Library"
                 Margin="10"
                 HorizontalOptions="Center"
-                Clicked="OnShowVideoLibraryClicked" />
+                Clicked="OnShowVideoLibraryClicked" >
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Status}"
+                                 Value="{x:Static video:VideoStatus.NotReady}">
+                        <Setter Property="IsVisible" Value="True"></Setter>
+                    </DataTrigger>
+                    
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Status}"
+                                 Value="{x:Static video:VideoStatus.Playing}">
+                        <Setter Property="IsVisible" Value="False"></Setter>
+                    </DataTrigger>
+
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Status}"
+                                 Value="{x:Static video:VideoStatus.Paused}">
+                        <Setter Property="IsVisible" Value="True" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Text="Show Video in Youtube"
+                Margin="10"
+                HorizontalOptions="Center"
+                Clicked="OnShowVideoYoutubeClicked">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Status}"
+                                 Value="{x:Static video:VideoStatus.NotReady}">
+                        <Setter Property="IsVisible" Value="True"></Setter>
+                    </DataTrigger>
+
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Status}"
+                                 Value="{x:Static video:VideoStatus.Playing}">
+                        <Setter Property="IsVisible" Value="False"></Setter>
+                    </DataTrigger>
+
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Status}"
+                                 Value="{x:Static video:VideoStatus.Paused}">
+                        <Setter Property="IsVisible" Value="True" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
         </StackLayout>
     </Grid>
 </ContentPage>

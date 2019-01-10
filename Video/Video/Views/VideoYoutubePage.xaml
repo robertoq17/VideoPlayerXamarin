@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Video.Views.VideoYoutube"
+             Title="Youtube">
+
+    <StackLayout Margin="20">
+        <StackLayout
+        Orientation="Vertical">
+            <Button Text="Show VideoPlayer" HorizontalOptions="Start" Clicked="BackButton"></Button>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Back" HorizontalOptions="StartAndExpand" Clicked="OnBackButtonClicked" />
+            <Button Text="Forward" HorizontalOptions="EndAndExpand" Clicked="OnForwardButtonClicked" />
+        </StackLayout>
+        <WebView x:Name="webView" WidthRequest="1000" HeightRequest="1000" 
+                 Source="{Binding htmlSource}"/>        
+    </StackLayout>   
+
+</ContentPage>
